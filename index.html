@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Waste-to-Value Intelligence Network (WIN) — Smart City Industrial Waste Exchange System powered by AI">
+    <title>WIN — Waste-to-Value Intelligence Network</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <!-- Ambient Background -->
+    <div class="ambient-bg" id="ambient-bg"></div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" style="position: fixed; top: 80px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none;"></div>
+
+    <!-- ===== LOGIN / REGISTER SCREEN ===== -->
+    <div id="auth-screen" class="auth-screen">
+        <div class="auth-particles" id="auth-particles"></div>
+        <div class="auth-container">
+            <div class="auth-logo">
+                <div class="auth-logo-icon"><i class="fas fa-recycle"></i></div>
+                <h1>WIN</h1>
+                <p>Waste-to-Value Intelligence Network</p>
+            </div>
+            <!-- Tab Toggle -->
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login" id="tab-login">Sign In</button>
+                <button class="auth-tab" data-tab="register" id="tab-register">Register</button>
+            </div>
+            <!-- LOGIN FORM -->
+            <form id="login-form" class="auth-form">
+                <div class="auth-field">
+                    <label><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="login-username" placeholder="Enter username" required autocomplete="username">
+                </div>
+                <div class="auth-field">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="login-password" placeholder="Enter password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="auth-btn" id="login-btn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+                <p class="auth-error hidden" id="login-error"></p>
+                <p class="auth-hint">Admin: admin / 1234 &nbsp;|&nbsp; Mediator: med / 1234 &nbsp;|&nbsp; Business: Registered credentials</p>
+            </form>
+            <!-- REGISTER FORM -->
+            <form id="register-form" class="auth-form hidden">
+                <div class="auth-field">
+                    <label><i class="fas fa-building"></i> Business Name</label>
+                    <input type="text" id="reg-business" placeholder="e.g. Tata Industries" required>
+                </div>
+                <div class="auth-field">
+                    <label><i class="fas fa-user-plus"></i> Username</label>
+                    <input type="text" id="reg-username" placeholder="Choose a username" required autocomplete="username">
+                </div>
+                <div class="auth-field">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="reg-password" placeholder="Choose a password" required autocomplete="new-password">
+                </div>
+                <div class="auth-field">
+                    <label><i class="fas fa-lock"></i> Confirm Password</label>
+                    <input type="password" id="reg-confirm" placeholder="Confirm your password" required>
+                </div>
+                <button type="submit" class="auth-btn register-btn" id="register-btn"><i class="fas fa-user-plus"></i> Create Business Account</button>
+                <p class="auth-error hidden" id="register-error"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Preloader -->
+    <div id="preloader" class="hidden">
+        <div class="loader-content">
+            <div class="loader-ring"></div>
+            <div class="loader-ring"></div>
+            <div class="loader-ring"></div>
+            <div class="loader-logo">
+                <i class="fas fa-recycle"></i>
+            </div>
+            <p class="loader-text">Initializing WIN Platform...</p>
+            <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+        </div>
+    </div>
+
+    <!-- App Shell -->
+    <div id="app" class="app-container hidden">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-recycle"></i>
+                    </div>
+                    <div class="logo-text">
+                        <span class="logo-title">WIN</span>
+                        <span class="logo-subtitle" id="panel-label">Admin Panel</span>
+                    </div>
+                </div>
+                <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-section-label">MAIN</li>
+                    <li>
+                        <a href="#" class="nav-link active" data-page="dashboard" id="nav-dashboard">
+                            <i class="fas fa-th-large"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link" data-page="upload" id="nav-upload">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Upload Waste</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link" data-page="matching" id="nav-matching">
+                            <i class="fas fa-brain"></i>
+                            <span>Smart Matching</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link" data-page="logistics" id="nav-logistics">
+                            <i class="fas fa-truck"></i>
+                            <span>Logistics</span>
+                        </a>
+                    </li>
+                    <li class="nav-section-label">ANALYTICS</li>
+                    <li>
+                        <a href="#" class="nav-link" data-page="impact" id="nav-impact">
+                            <i class="fas fa-leaf"></i>
+                            <span>Impact</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link" data-page="city-grid" id="nav-city-grid">
+                            <i class="fas fa-satellite"></i>
+                            <span>City Intelligence</span>
+                            <span class="nav-badge">LIVE</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link" data-page="admin-activity" id="nav-admin-activity">
+                            <i class="fas fa-search-dollar"></i>
+                            <span>Activity Search</span>
+                        </a>
+                    </li>
+                    <li class="nav-section-label" id="nav-section-label-mediator" style="display:none;">VERIFICATION</li>
+                    <li id="nav-item-mediator" style="display:none;">
+                        <a href="#" class="nav-link" data-page="mediator" id="nav-mediator">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Trusted Exchange</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <div class="status-dot online"></div>
+                    <span>System Online</span>
+                </div>
+                <div class="sidebar-user">
+                    <div class="user-avatar" id="user-avatar-initials">SK</div>
+                    <div class="user-info">
+                        <span class="user-name" id="user-display-name">Smart City Admin</span>
+                        <span class="user-role" id="user-display-role">Level 5 Access</span>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Menu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="breadcrumb">
+                        <span class="breadcrumb-icon"><i class="fas fa-home"></i></span>
+                        <span id="breadcrumb-text">Dashboard</span>
+                    </div>
+                </div>
+                <div class="topbar-center">
+                    <div class="city-score-bar">
+                        <span class="score-label">City Sustainability Score</span>
+                        <div class="score-track">
+                            <div class="score-fill" id="sustainability-score" style="width: 78%"></div>
+                        </div>
+                        <span class="score-value" id="score-value">78/100</span>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <hr style="border-color: rgba(255,255,255,0.05); margin: 0 10px; width: 1px; height: 20px;">
+                    <div class="topbar-actions">
+                        <button class="topbar-btn" id="palette-toggle-btn" aria-label="Color Theme Customizer">
+                            <i class="fas fa-palette"></i>
+                        </button>
+                        <button class="topbar-btn" id="theme-toggle-btn" aria-label="Toggle Light/Dark Theme">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                        <button class="topbar-btn" id="notification-btn" aria-label="Notifications">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-dot"></span>
+                        </button>
+                        <button class="topbar-btn" id="policy-sim-btn" aria-label="Policy Simulation">
+                            <i class="fas fa-flask"></i>
+                            <span class="btn-label">Policy Sim</span>
+                        </button>
+                        <div class="live-clock" id="live-clock"></div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Notification Panel -->
+            <div id="notification-panel" class="notification-panel hidden">
+                <div class="notif-header">
+                    <h3><i class="fas fa-bell"></i> Alerts & Notifications</h3>
+                    <button class="notif-close" id="notif-close"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="notif-list">
+                    <div class="notif-item critical">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <strong>Excess Chemical Waste</strong>
+                            <p>Zone-7 industrial belt — 340 tons unprocessed. Immediate rerouting needed.</p>
+                            <span class="notif-time">2 min ago</span>
+                        </div>
+                    </div>
+                    <div class="notif-item warning">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <strong>Idle Waste Detected</strong>
+                            <p>Fly ash stockpile at Unit-12 sitting idle for 14 days.</p>
+                            <span class="notif-time">18 min ago</span>
+                        </div>
+                    </div>
+                    <div class="notif-item info">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <strong>New Match Found</strong>
+                            <p>Plastic waste from Unit-3 matched with Road Construction Co.</p>
+                            <span class="notif-time">1 hr ago</span>
+                        </div>
+                    </div>
+                    <div class="notif-item info">
+                        <i class="fas fa-chart-line"></i>
+                        <div>
+                            <strong>Demand Spike Predicted</strong>
+                            <p>Brick manufacturers expected to need 200% more fly ash next week.</p>
+                            <span class="notif-time">3 hrs ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Policy Simulation Modal -->
+            <div id="policy-modal" class="modal-overlay hidden">
+                <div class="modal-content glass-card">
+                    <div class="modal-header">
+                        <h2><i class="fas fa-flask"></i> Policy Simulation Engine</h2>
+                        <button class="modal-close" id="policy-modal-close"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="modal-desc">Simulate policy changes to predict impact on city-wide waste management.</p>
+                        <div class="policy-controls">
+                            <div class="policy-slider-group">
+                                <label>Landfill Tax Increase</label>
+                                <input type="range" min="0" max="100" value="30" class="policy-slider" id="policy-tax">
+                                <span class="policy-val" id="policy-tax-val">30%</span>
+                            </div>
+                            <div class="policy-slider-group">
+                                <label>Recycling Subsidy</label>
+                                <input type="range" min="0" max="100" value="50" class="policy-slider" id="policy-subsidy">
+                                <span class="policy-val" id="policy-subsidy-val">50%</span>
+                            </div>
+                            <div class="policy-slider-group">
+                                <label>Mandatory Reuse Quota</label>
+                                <input type="range" min="0" max="100" value="40" class="policy-slider" id="policy-quota">
+                                <span class="policy-val" id="policy-quota-val">40%</span>
+                            </div>
+                        </div>
+                        <button class="btn-primary" id="run-simulation-btn"><i class="fas fa-play"></i> Run Simulation</button>
+                        <div id="simulation-results" class="simulation-results hidden">
+                            <h3>Projected Outcomes</h3>
+                            <div class="sim-result-grid">
+                                <div class="sim-result-card positive">
+                                    <i class="fas fa-arrow-down"></i>
+                                    <span class="sim-val">-34%</span>
+                                    <span class="sim-label">Landfill Usage</span>
+                                </div>
+                                <div class="sim-result-card positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span class="sim-val">+28%</span>
+                                    <span class="sim-label">Recycling Rate</span>
+                                </div>
+                                <div class="sim-result-card positive">
+                                    <i class="fas fa-arrow-down"></i>
+                                    <span class="sim-val">-12K</span>
+                                    <span class="sim-label">Tons CO₂/yr</span>
+                                </div>
+                                <div class="sim-result-card neutral">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span class="sim-val">+$2.1M</span>
+                                    <span class="sim-label">Annual Cost</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== PAGE: DASHBOARD ===== -->
+            <section id="page-dashboard" class="page active">
+                <div class="page-header">
+                    <h1>Command Center</h1>
+                    <p class="page-subtitle">Real-time overview of city-wide industrial waste intelligence</p>
+                </div>
+
+                <!-- KPI Row -->
+                <div class="kpi-row">
+                    <div class="kpi-card" id="kpi-co2">
+                        <div class="kpi-icon green"><i class="fas fa-cloud"></i></div>
+                        <div class="kpi-data">
+                            <span class="kpi-value" data-target="12450">0</span>
+                            <span class="kpi-unit">tons</span>
+                        </div>
+                        <span class="kpi-label">CO₂ Saved</span>
+                        <span class="kpi-trend up"><i class="fas fa-arrow-up"></i> 12.3%</span>
+                    </div>
+                    <div class="kpi-card" id="kpi-landfill">
+                        <div class="kpi-icon blue"><i class="fas fa-dumpster"></i></div>
+                        <div class="kpi-data">
+                            <span class="kpi-value" data-target="8340">0</span>
+                            <span class="kpi-unit">tons</span>
+                        </div>
+                        <span class="kpi-label">Landfill Diverted</span>
+                        <span class="kpi-trend up"><i class="fas fa-arrow-up"></i> 8.7%</span>
+                    </div>
+                    <div class="kpi-card" id="kpi-savings">
+                        <div class="kpi-icon amber"><i class="fas fa-dollar-sign"></i></div>
+                        <div class="kpi-data">
+                            <span class="kpi-value" data-target="3200000" data-prefix="$">0</span>
+                            <span class="kpi-unit"></span>
+                        </div>
+                        <span class="kpi-label">Cost Savings</span>
+                        <span class="kpi-trend up"><i class="fas fa-arrow-up"></i> 15.1%</span>
+                    </div>
+                    <div class="kpi-card" id="kpi-matches">
+                        <div class="kpi-icon purple"><i class="fas fa-handshake"></i></div>
+                        <div class="kpi-data">
+                            <span class="kpi-value" data-target="1847">0</span>
+                            <span class="kpi-unit">active</span>
+                        </div>
+                        <span class="kpi-label">AI Matches</span>
+                        <span class="kpi-trend up"><i class="fas fa-arrow-up"></i> 22.6%</span>
+                    </div>
+                </div>
+
+                <!-- Dashboard Grid -->
+                <div class="dashboard-grid">
+                    <!-- Waste Flow Chart -->
+                    <div class="glass-card card-wide">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-area"></i> Waste Flow Analytics</h3>
+                            <div class="card-actions">
+                                <button class="chip active" data-range="week">Week</button>
+                                <button class="chip" data-range="month">Month</button>
+                                <button class="chip" data-range="year">Year</button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="wasteFlowChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Recent Matches -->
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-brain"></i> Recent AI Matches</h3>
+                            <span class="badge live">LIVE</span>
+                        </div>
+                        <div class="match-list" id="recent-matches">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Waste Categories -->
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-pie"></i> Waste Categories</h3>
+                        </div>
+                        <div class="chart-container chart-sm">
+                            <canvas id="wasteCategoryChart"></canvas>
+                        </div>
+                        <div class="category-legend" id="category-legend"></div>
+                    </div>
+
+                    <!-- Predictive Demand -->
+                    <div class="glass-card card-wide">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-line"></i> Predictive Waste Demand</h3>
+                            <span class="badge warning"><i class="fas fa-exclamation-circle"></i> High demand expected next week</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="predictiveChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Trust & Verification -->
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-shield-alt"></i> Trust Layer</h3>
+                        </div>
+                        <div class="trust-list" id="trust-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== PAGE: UPLOAD WASTE ===== -->
+            <section id="page-upload" class="page">
+                <div class="page-header">
+                    <h1>Upload Industrial Waste</h1>
+                    <p class="page-subtitle">Submit your waste data for AI-powered matching and transformation analysis</p>
+                </div>
+                <div class="upload-layout">
+                    <div class="glass-card upload-form-card">
+                        <h3><i class="fas fa-cloud-upload-alt"></i> Waste Submission Form</h3>
+                        <form id="waste-upload-form">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="waste-type">Waste Type</label>
+                                    <div class="select-wrapper">
+                                        <select id="waste-type" required>
+                                            <option value="">Select waste type...</option>
+                                            <option value="plastic">♻️ Plastic Waste</option>
+                                            <option value="metal">🔩 Metal Scrap</option>
+                                            <option value="chemical">🧪 Chemical Waste</option>
+                                            <option value="flyash">🏭 Fly Ash</option>
+                                            <option value="organic">🌿 Organic Waste</option>
+                                            <option value="ewaste">💻 E-Waste</option>
+                                            <option value="textile">🧵 Textile Waste</option>
+                                            <option value="rubber">⚫ Rubber Waste</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="waste-qty">Quantity (Tons)</label>
+                                    <input type="number" id="waste-qty" placeholder="e.g. 150" required min="1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="waste-industry">Industry Source</label>
+                                    <input type="text" id="waste-industry" placeholder="e.g. Tata Steel Plant" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="waste-location">Location</label>
+                                    <input type="text" id="waste-location" placeholder="e.g. Industrial Zone 4, Bangalore" required>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="waste-desc">Description & Composition</label>
+                                    <textarea id="waste-desc" rows="3" placeholder="Describe the waste composition, hazard level, and any special handling requirements..."></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Hazard Classification</label>
+                                    <div class="hazard-options">
+                                        <label class="hazard-option">
+                                            <input type="radio" name="hazard" value="safe" checked>
+                                            <span class="hazard-badge safe"><i class="fas fa-check-circle"></i> Safe</span>
+                                        </label>
+                                        <label class="hazard-option">
+                                            <input type="radio" name="hazard" value="moderate">
+                                            <span class="hazard-badge moderate"><i class="fas fa-exclamation-circle"></i> Moderate</span>
+                                        </label>
+                                        <label class="hazard-option">
+                                            <input type="radio" name="hazard" value="hazardous">
+                                            <span class="hazard-badge hazardous"><i class="fas fa-radiation"></i> Hazardous</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="waste-freq">Generation Frequency</label>
+                                    <div class="select-wrapper">
+                                        <select id="waste-freq">
+                                            <option value="daily">Daily</option>
+                                            <option value="weekly" selected>Weekly</option>
+                                            <option value="monthly">Monthly</option>
+                                            <option value="one-time">One-Time</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary btn-lg" id="submit-waste-btn">
+                                <i class="fas fa-brain"></i> Submit for AI Analysis
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- AI Results Panel (shown after submission) -->
+                    <div class="glass-card upload-results-card hidden" id="upload-results">
+                        <div class="card-header">
+                            <h3><i class="fas fa-magic"></i> AI Analysis Results</h3>
+                            <span class="badge live">AI PROCESSED</span>
+                        </div>
+                        <div class="ai-summary" id="ai-summary">
+                            <!-- Populated by JS -->
+                        </div>
+                        <div class="ai-matches-section">
+                            <h4><i class="fas fa-handshake"></i> Potential Matches</h4>
+                            <div id="ai-match-cards" class="ai-match-cards">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                        <div class="transformation-section">
+                            <h4><i class="fas fa-exchange-alt"></i> Transformation Potential</h4>
+                            <div id="transform-preview" class="transform-preview">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== PAGE: SMART MATCHING ===== -->
+            <section id="page-matching" class="page">
+                <div class="page-header">
+                    <h1>AI Smart Matching</h1>
+                    <p class="page-subtitle">Intelligent waste-to-value matching with hyperlocal industry connections</p>
+                </div>
+                <div class="matching-layout">
+                    <!-- Active Waste Items -->
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-database"></i> Active Waste Inventory</h3>
+                            <div class="card-actions">
+                                <input type="text" class="search-input" placeholder="Search waste..." id="waste-search">
+                            </div>
+                        </div>
+                        <div class="waste-items-list" id="waste-items-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Hyperlocal Map Panel -->
+                    <div class="glass-card card-wide">
+                        <div class="card-header">
+                            <h3><i class="fas fa-map-marker-alt"></i> Hyperlocal Industrial Map</h3>
+                            <span class="badge info"><i class="fas fa-crosshairs"></i> Bangalore Metro Region</span>
+                        </div>
+                        <div class="hyperlocal-map" id="hyperlocal-map">
+                            <div id="map-canvas" style="width: 100%; height: 100%;"></div>
+                            <div class="map-legend">
+                                <div class="legend-item"><span class="legend-dot red"></span> Waste Source</div>
+                                <div class="legend-item"><span class="legend-dot green"></span> Potential Buyer</div>
+                                <div class="legend-item"><span class="legend-line"></span> Match Route</div>
+                            </div>
+                        </div>
+                        <div class="nearby-industries" id="nearby-industries">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Transformation Panel -->
+                    <div class="glass-card" id="transformation-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-magic"></i> What Can This Become?</h3>
+                        </div>
+                        <div class="transformation-panel" id="transformation-panel">
+                            <p class="placeholder-text">Select a waste item to see transformation possibilities</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== PAGE: LOGISTICS ===== -->
+            <section id="page-logistics" class="page">
+                <div class="page-header">
+                    <h1>Logistics Simulation</h1>
+                    <p class="page-subtitle">Optimized transport routing and cost efficiency analysis</p>
+                </div>
+                <div class="logistics-layout">
+                    <div class="glass-card card-wide">
+                        <div class="card-header">
+                            <h3><i class="fas fa-route"></i> Transport Route Visualization</h3>
+                            <button class="btn-secondary" id="simulate-route-btn"><i class="fas fa-play"></i> Simulate Route</button>
+                        </div>
+                        <div class="route-canvas-wrap">
+                            <div id="route-canvas" style="width: 100%; height: 100%; z-index: 1;"></div>
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-cog"></i> Route Parameters</h3>
+                        </div>
+                        <div class="route-params">
+                            <div class="form-group">
+                                <label>Origin</label>
+                                <div class="select-wrapper">
+                                    <select id="route-origin">
+                                        <option>Industrial Zone 4 — Steel Plant</option>
+                                        <option>Unit 12 — Fly Ash Storage</option>
+                                        <option>Zone 7 — Chemical Factory</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Destination</label>
+                                <div class="select-wrapper">
+                                    <select id="route-dest">
+                                        <option>Road Construction Co. — Highway</option>
+                                        <option>EcoBricks Pvt Ltd — Zone 2</option>
+                                        <option>Green Energy Hub — Zone 9</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Load (Tons)</label>
+                                <input type="number" value="50" id="route-load">
+                            </div>
+                        </div>
+                        <div class="route-stats" id="route-stats">
+                            <div class="route-stat">
+                                <i class="fas fa-road"></i>
+                                <span class="stat-val">18.5 km</span>
+                                <span class="stat-label">Distance</span>
+                            </div>
+                            <div class="route-stat">
+                                <i class="fas fa-clock"></i>
+                                <span class="stat-val">42 min</span>
+                                <span class="stat-label">Est. Time</span>
+                            </div>
+                            <div class="route-stat">
+                                <i class="fas fa-rupee-sign"></i>
+                                <span class="stat-val">₹12,400</span>
+                                <span class="stat-label">Est. Cost</span>
+                            </div>
+                            <div class="route-stat">
+                                <i class="fas fa-gas-pump"></i>
+                                <span class="stat-val">14.2 L</span>
+                                <span class="stat-label">Fuel Est.</span>
+                            </div>
+                        </div>
+                        <div class="efficiency-bar-wrap">
+                            <label>Route Efficiency</label>
+                            <div class="efficiency-bar">
+                                <div class="efficiency-fill" style="width:87%"></div>
+                            </div>
+                            <span class="efficiency-value">87%</span>
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-truck-loading"></i> Fleet Status</h3>
+                        </div>
+                        <div class="fleet-list">
+                            <div class="fleet-item">
+                                <div class="fleet-icon active"><i class="fas fa-truck"></i></div>
+                                <div class="fleet-info">
+                                    <span class="fleet-name">TRK-001</span>
+                                    <span class="fleet-status">En Route — Zone 4 → Zone 2</span>
+                                </div>
+                                <span class="fleet-eta">ETA: 18 min</span>
+                            </div>
+                            <div class="fleet-item">
+                                <div class="fleet-icon active"><i class="fas fa-truck"></i></div>
+                                <div class="fleet-info">
+                                    <span class="fleet-name">TRK-005</span>
+                                    <span class="fleet-status">Loading — Industrial Zone 7</span>
+                                </div>
+                                <span class="fleet-eta">Depart: 10 min</span>
+                            </div>
+                            <div class="fleet-item">
+                                <div class="fleet-icon idle"><i class="fas fa-truck"></i></div>
+                                <div class="fleet-info">
+                                    <span class="fleet-name">TRK-003</span>
+                                    <span class="fleet-status">Available — Depot A</span>
+                                </div>
+                                <span class="fleet-eta">Ready</span>
+                            </div>
+                            <div class="fleet-item">
+                                <div class="fleet-icon maintenance"><i class="fas fa-truck"></i></div>
+                                <div class="fleet-info">
+                                    <span class="fleet-name">TRK-007</span>
+                                    <span class="fleet-status">Maintenance</span>
+                                </div>
+                                <span class="fleet-eta">48 hrs</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== PAGE: IMPACT ===== -->
+            <section id="page-impact" class="page">
+                <div class="page-header">
+                    <h1>Impact Dashboard</h1>
+                    <p class="page-subtitle">Measuring environmental and economic impact of waste-to-value operations</p>
+                </div>
+                <div class="impact-kpis">
+                    <div class="impact-kpi-card">
+                        <div class="impact-kpi-visual green">
+                            <svg viewBox="0 0 120 120">
+                                <circle cx="60" cy="60" r="52" class="track"></circle>
+                                <circle cx="60" cy="60" r="52" class="fill" id="impact-ring-co2" stroke-dasharray="327" stroke-dashoffset="72"></circle>
+                            </svg>
+                            <span class="ring-value">78%</span>
+                        </div>
+                        <div class="impact-kpi-info">
+                            <span class="impact-kpi-val counter" id="impact-co2-val" data-target="12450">0</span>
+                            <span class="impact-kpi-unit">Tons CO₂ Prevented</span>
+                            <span class="impact-kpi-compare"><i class="fas fa-arrow-up"></i> +12.3% vs last quarter</span>
+                        </div>
+                    </div>
+                    <div class="impact-kpi-card">
+                        <div class="impact-kpi-visual blue">
+                            <svg viewBox="0 0 120 120">
+                                <circle cx="60" cy="60" r="52" class="track"></circle>
+                                <circle cx="60" cy="60" r="52" class="fill" stroke-dasharray="327" stroke-dashoffset="98"></circle>
+                            </svg>
+                            <span class="ring-value">70%</span>
+                        </div>
+                        <div class="impact-kpi-info">
+                            <span class="impact-kpi-val counter" id="impact-landfill-val" data-target="8340">0</span>
+                            <span class="impact-kpi-unit">Tons Landfill Diverted</span>
+                            <span class="impact-kpi-compare"><i class="fas fa-arrow-up"></i> +8.7% vs last quarter</span>
+                        </div>
+                    </div>
+                    <div class="impact-kpi-card">
+                        <div class="impact-kpi-visual amber">
+                            <svg viewBox="0 0 120 120">
+                                <circle cx="60" cy="60" r="52" class="track"></circle>
+                                <circle cx="60" cy="60" r="52" class="fill" stroke-dasharray="327" stroke-dashoffset="56"></circle>
+                            </svg>
+                            <span class="ring-value">83%</span>
+                        </div>
+                        <div class="impact-kpi-info">
+                            <span class="impact-kpi-val" id="impact-savings-val">$3.2M</span>
+                            <span class="impact-kpi-unit">Cost Savings Generated</span>
+                            <span class="impact-kpi-compare"><i class="fas fa-arrow-up"></i> +15.1% vs last quarter</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="impact-grid">
+                    <div class="glass-card card-wide">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-bar"></i> Monthly Impact Trends</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="impactTrendChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-trophy"></i> Top Contributing Industries</h3>
+                        </div>
+                        <div class="contributor-list">
+                            <div class="contributor-item">
+                                <span class="contributor-rank gold">1</span>
+                                <div class="contributor-info">
+                                    <span class="contributor-name">Tata Steel Works</span>
+                                    <div class="contributor-bar"><div class="contributor-fill" style="width:92%"></div></div>
+                                </div>
+                                <span class="contributor-val">2,340 tons</span>
+                            </div>
+                            <div class="contributor-item">
+                                <span class="contributor-rank silver">2</span>
+                                <div class="contributor-info">
+                                    <span class="contributor-name">Reliance Polymers</span>
+                                    <div class="contributor-bar"><div class="contributor-fill" style="width:78%"></div></div>
+                                </div>
+                                <span class="contributor-val">1,890 tons</span>
+                            </div>
+                            <div class="contributor-item">
+                                <span class="contributor-rank bronze">3</span>
+                                <div class="contributor-info">
+                                    <span class="contributor-name">JSW Cement</span>
+                                    <div class="contributor-bar"><div class="contributor-fill" style="width:65%"></div></div>
+                                </div>
+                                <span class="contributor-val">1,560 tons</span>
+                            </div>
+                            <div class="contributor-item">
+                                <span class="contributor-rank">4</span>
+                                <div class="contributor-info">
+                                    <span class="contributor-name">Infosys Campus</span>
+                                    <div class="contributor-bar"><div class="contributor-fill" style="width:45%"></div></div>
+                                </div>
+                                <span class="contributor-val">1,080 tons</span>
+                            </div>
+                            <div class="contributor-item">
+                                <span class="contributor-rank">5</span>
+                                <div class="contributor-info">
+                                    <span class="contributor-name">Wipro Tech Park</span>
+                                    <div class="contributor-bar"><div class="contributor-fill" style="width:38%"></div></div>
+                                </div>
+                                <span class="contributor-val">910 tons</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== PAGE: CITY INTELLIGENCE GRID ===== -->
+            <section id="page-city-grid" class="page">
+                <div class="page-header-inline">
+                    <div>
+                        <h1>Urban Resource Intelligence Grid</h1>
+                        <p class="page-subtitle">Real-time city-wide waste management intelligence</p>
+                    </div>
+                    <div class="grid-controls">
+                        <div class="time-slider-wrap">
+                            <label><i class="fas fa-clock"></i> Time Analysis</label>
+                            <input type="range" min="0" max="23" value="14" id="time-slider" class="time-slider">
+                            <span id="time-slider-val" class="time-val">14:00</span>
+                        </div>
+                        <div class="grid-toggles">
+                            <button class="toggle-btn active" id="toggle-waste" title="Waste Zones"><i class="fas fa-industry"></i></button>
+                            <button class="toggle-btn active" id="toggle-demand" title="Demand Zones"><i class="fas fa-recycle"></i></button>
+                            <button class="toggle-btn active" id="toggle-flows" title="Flow Lines"><i class="fas fa-exchange-alt"></i></button>
+                            <button class="toggle-btn" id="toggle-alerts" title="Alerts"><i class="fas fa-exclamation-triangle"></i></button>
+                            <button class="toggle-btn" id="toggle-carbon" title="Carbon Trades"><i class="fas fa-leaf"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="city-grid-layout">
+                    <!-- Main Map -->
+                    <div class="city-map-container glass-card">
+                        <div id="city-map-canvas" style="width: 100%; height: 100%; z-index: 1;"></div>
+                        <div class="city-map-overlay-legend" style="z-index: 1000;">
+                            <div class="legend-item"><span class="legend-dot red pulse"></span> Waste Generation</div>
+                            <div class="legend-item"><span class="legend-dot green pulse"></span> Reuse Demand</div>
+                            <div class="legend-item"><span class="legend-line animated"></span> Active Flows</div>
+                            <div class="legend-item"><span class="legend-dot amber blink"></span> Idle Waste</div>
+                            <div class="legend-item"><span class="legend-dot red-alert blink"></span> Excess Alert</div>
+                        </div>
+                        <div class="city-map-clusters" id="city-map-clusters">
+                            <!-- Cluster overlays populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- AI Recommendations -->
+                    <div class="city-side-panels">
+                        <div class="glass-card ai-rec-panel">
+                            <div class="card-header">
+                                <h3><i class="fas fa-robot"></i> AI Recommendations</h3>
+                                <span class="badge live">LIVE</span>
+                            </div>
+                            <div class="ai-rec-list" id="ai-rec-list">
+                                <div class="ai-rec-item priority-high">
+                                    <div class="rec-priority">HIGH</div>
+                                    <div class="rec-body">
+                                        <p>Reroute 120 tons of fly ash from Zone-5 to brick manufacturers in Zone-2. Estimated savings: ₹4.2L.</p>
+                                    </div>
+                                    <button class="btn-sm">Apply</button>
+                                </div>
+                                <div class="ai-rec-item priority-medium">
+                                    <div class="rec-priority">MED</div>
+                                    <div class="rec-body">
+                                        <p>Consolidate plastic waste pickups from Zone-3 and Zone-4 to reduce transport cost by 34%.</p>
+                                    </div>
+                                    <button class="btn-sm">Apply</button>
+                                </div>
+                                <div class="ai-rec-item priority-low">
+                                    <div class="rec-priority">LOW</div>
+                                    <div class="rec-body">
+                                        <p>Schedule organic waste collection from Zone-1 cafeterias before 6 AM for biogas efficiency.</p>
+                                    </div>
+                                    <button class="btn-sm">Apply</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card cluster-panel">
+                            <div class="card-header">
+                                <h3><i class="fas fa-project-diagram"></i> Industrial Clusters</h3>
+                            </div>
+                            <div class="cluster-list">
+                                <div class="cluster-item">
+                                    <div class="cluster-color" style="background: var(--neon-blue)"></div>
+                                    <div class="cluster-info">
+                                        <span class="cluster-name">Heavy Manufacturing Belt</span>
+                                        <span class="cluster-detail">12 industries · 4,200 tons/month</span>
+                                    </div>
+                                </div>
+                                <div class="cluster-item">
+                                    <div class="cluster-color" style="background: var(--neon-green)"></div>
+                                    <div class="cluster-info">
+                                        <span class="cluster-name">Tech Park Corridor</span>
+                                        <span class="cluster-detail">8 industries · 1,800 tons/month</span>
+                                    </div>
+                                </div>
+                                <div class="cluster-item">
+                                    <div class="cluster-color" style="background: var(--neon-amber)"></div>
+                                    <div class="cluster-info">
+                                        <span class="cluster-name">Chemical Processing Hub</span>
+                                        <span class="cluster-detail">6 industries · 3,100 tons/month</span>
+                                    </div>
+                                </div>
+                                <div class="cluster-item">
+                                    <div class="cluster-color" style="background: var(--neon-purple)"></div>
+                                    <div class="cluster-info">
+                                        <span class="cluster-name">Textile & Garment Zone</span>
+                                        <span class="cluster-detail">15 industries · 2,600 tons/month</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== PAGE: ADMIN ACTIVITY SEARCH ===== -->
+            <section id="page-admin-activity" class="page">
+                <div class="page-header">
+                    <h1>Activity Search</h1>
+                    <p class="page-subtitle">Monitor historical transactions and profile views for a specific company</p>
+                </div>
+                <div class="glass-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-search"></i> Search Company Activity</h3>
+                    </div>
+                    <div class="search-container" style="display: flex; gap: 10px; margin-bottom: 20px;">
+                        <input type="text" id="admin-activity-search" class="search-input" placeholder="Enter company name (e.g. Tata Steel Plant)..." style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2) !important; color: white;">
+                        <button class="btn-primary" id="admin-activity-btn"><i class="fas fa-search"></i> Search</button>
+                    </div>
+                </div>
+                <div id="admin-activity-results" class="hidden" style="margin-top: 20px;">
+                    <!-- Results populated by JS -->
+                </div>
+            </section>
+
+            <!-- ===== BUSINESS PANEL ===== -->
+            <section id="page-business" class="page">
+                <div class="page-header">
+                    <h1>Business Dashboard</h1>
+                    <p class="page-subtitle">Export your waste, import materials, and track your revenue &amp; environmental impact</p>
+                </div>
+
+                <!-- Business KPI Row (starts at zero) -->
+                <div class="kpi-row" id="biz-kpi-row">
+                    <div class="kpi-card" id="biz-kpi-revenue">
+                        <div class="kpi-icon green"><i class="fas fa-rupee-sign"></i></div>
+                        <div class="kpi-data">
+                            <span class="kpi-value biz-counter" id="biz-revenue-val">₹0</span>
+                        </div>
+                        <span class="kpi-label">Revenue Earned</span>
+                        <span class="kpi-trend up"><i class="fas fa-arrow-up"></i> 0%</span>
+                    </div>
+                    <div class="kpi-card" id="biz-kpi-co2">
+                        <div class="kpi-icon blue"><i class="fas fa-globe-americas"></i></div>
+                        <div class="kpi-data">
+                            <span class="kpi-value biz-counter" id="biz-co2-val">0</span>
+                            <span class="kpi-unit">kg CO₂</span>
+                        </div>
+                        <span class="kpi-label">Earth Saved</span>
+                        <span class="kpi-trend up"><i class="fas fa-leaf"></i> 0%</span>
+                    </div>
+                    <div class="kpi-card" id="biz-kpi-waste">
+                        <div class="kpi-icon amber"><i class="fas fa-arrow-circle-up"></i></div>
+                        <div class="kpi-data">
+                            <span class="kpi-value biz-counter" id="biz-waste-val">0</span>
+                            <span class="kpi-unit">tons</span>
+                        </div>
+                        <span class="kpi-label">Waste Exported</span>
+                        <span class="kpi-trend up"><i class="fas fa-arrow-up"></i> 0%</span>
+                    </div>
+                    <div class="kpi-card" id="biz-kpi-imported">
+                        <div class="kpi-icon cyan"><i class="fas fa-arrow-circle-down"></i></div>
+                        <div class="kpi-data">
+                            <span class="kpi-value biz-counter" id="biz-imported-val">0</span>
+                            <span class="kpi-unit">tons</span>
+                        </div>
+                        <span class="kpi-label">Waste Imported</span>
+                        <span class="kpi-trend up"><i class="fas fa-arrow-up"></i> 0%</span>
+                    </div>
+                    <div class="kpi-card" id="biz-kpi-savings">
+                        <div class="kpi-icon green"><i class="fas fa-piggy-bank"></i></div>
+                        <div class="kpi-data">
+                            <span class="kpi-value biz-counter" id="biz-savings-val">₹0</span>
+                        </div>
+                        <span class="kpi-label">Import Savings</span>
+                        <span class="kpi-trend up"><i class="fas fa-arrow-up"></i> 0%</span>
+                    </div>
+                    <div class="kpi-card" id="biz-kpi-matches">
+                        <div class="kpi-icon purple"><i class="fas fa-handshake"></i></div>
+                        <div class="kpi-data">
+                            <span class="kpi-value biz-counter" id="biz-match-val">0</span>
+                        </div>
+                        <span class="kpi-label">Matches Made</span>
+                        <span class="kpi-trend up"><i class="fas fa-arrow-up"></i> 0%</span>
+                    </div>
+                </div>
+
+                <!-- Business Location Bar -->
+                <div class="glass-card biz-location-bar" id="biz-location-bar">
+                    <div class="biz-loc-left">
+                        <i class="fas fa-map-marker-alt" style="color:var(--neon-green);font-size:18px;"></i>
+                        <div class="biz-loc-info">
+                            <span class="biz-loc-label">Your Business Location</span>
+                            <span class="biz-loc-address" id="biz-loc-address">Detecting location...</span>
+                        </div>
+                    </div>
+                    <div class="biz-loc-actions">
+                        <button class="btn-sm" id="biz-loc-detect" onclick="detectBizLocation()"><i class="fas fa-crosshairs"></i> Auto-Detect</button>
+                        <button class="btn-sm" id="biz-loc-manual" onclick="toggleManualLocation()"><i class="fas fa-edit"></i> Enter Manually</button>
+                    </div>
+                    <div class="biz-loc-manual-input hidden" id="biz-loc-manual-input">
+                        <input type="text" id="biz-loc-lat" placeholder="Latitude" style="width:120px;">
+                        <input type="text" id="biz-loc-lng" placeholder="Longitude" style="width:120px;">
+                        <button class="btn-sm" onclick="saveManualLocation()"><i class="fas fa-check"></i> Save</button>
+                    </div>
+                </div>
+
+                <!-- Business Location Map -->
+                <div class="glass-card biz-my-map-card">
+                    <h3><i class="fas fa-map-marked-alt"></i> Your Location</h3>
+                    <div id="biz-my-map" style="height:200px;border-radius:8px;"></div>
+                </div>
+
+                <!-- ===== SECTION TABS ===== -->
+                <div class="biz-section-tabs">
+                    <button class="biz-section-tab active" id="biz-tab-export" onclick="switchBizTab('export')"><i class="fas fa-arrow-circle-up"></i> Export Waste</button>
+                    <button class="biz-section-tab" id="biz-tab-import" onclick="switchBizTab('import')"><i class="fas fa-arrow-circle-down"></i> Import Waste</button>
+                    <button class="biz-section-tab" id="biz-tab-activity" onclick="switchBizTab('activity')"><i class="fas fa-history"></i> Activity Dashboard</button>
+                    <button class="biz-section-tab" id="biz-tab-carbon" onclick="switchBizTab('carbon')"><i class="fas fa-leaf"></i> Carbon Market</button>
+                </div>
+
+                <!-- ===== EXPORT SECTION ===== -->
+                <div id="biz-export-section" class="biz-layout">
+                    <!-- Waste Upload Card -->
+                    <div class="glass-card biz-upload-card">
+                        <h3><i class="fas fa-cloud-upload-alt"></i> Upload Your Waste</h3>
+                        <form id="biz-waste-form">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="biz-waste-type">Waste Type</label>
+                                    <div class="select-wrapper">
+                                        <select id="biz-waste-type" required>
+                                            <option value="">Select waste type...</option>
+                                            <option value="plastic">♻️ Plastic Waste</option>
+                                            <option value="metal">🔩 Metal Scrap</option>
+                                            <option value="chemical">🧪 Chemical Waste</option>
+                                            <option value="flyash">🏭 Fly Ash</option>
+                                            <option value="organic">🌿 Organic Waste</option>
+                                            <option value="ewaste">💻 E-Waste</option>
+                                            <option value="textile">🧵 Textile Waste</option>
+                                            <option value="rubber">⚫ Rubber Waste</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="biz-waste-qty">Quantity (Tons)</label>
+                                    <input type="number" id="biz-waste-qty" placeholder="e.g. 50" required min="1">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="biz-waste-desc">Description</label>
+                                    <textarea id="biz-waste-desc" rows="2" placeholder="Describe the waste..."></textarea>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="biz-waste-doc"><i class="fas fa-file-alt"></i> Upload Purity Certificate / Quality Report</label>
+                                    <input type="file" id="biz-waste-doc" accept=".pdf,.png,.jpg" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white;">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary btn-lg" id="biz-submit-btn">
+                                <i class="fas fa-search"></i> Find Matching Companies
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Suggestions Card (hidden initially) -->
+                    <div class="glass-card biz-suggestions-card hidden" id="biz-suggestions">
+                        <div class="card-header">
+                            <h3><i class="fas fa-building"></i> Suggested Companies</h3>
+                            <span class="badge live">AI MATCHED</span>
+                        </div>
+                        <p class="biz-suggest-intro" id="biz-suggest-intro"></p>
+                        <div class="biz-company-list" id="biz-company-list"></div>
+                        <!-- Route Map -->
+                        <div class="biz-route-map-wrap">
+                            <h4><i class="fas fa-route"></i> Route to Selected Company</h4>
+                            <div id="biz-export-map" style="height:220px;border-radius:8px;margin:8px 0;"></div>
+                            <p class="biz-distance-info" id="biz-export-distance"></p>
+                        </div>
+                        <button class="btn-primary btn-lg" id="biz-confirm-btn" style="display:none;">
+                            <i class="fas fa-check-circle"></i> Confirm & Export Waste
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Export Pending Results -->
+                <div class="glass-card biz-results-card hidden" id="biz-results-pending" style="border-color: var(--neon-amber);">
+                    <div class="biz-success-header">
+                        <div class="biz-success-icon" style="background: rgba(251, 191, 36, 0.2); color: var(--neon-amber);"><i class="fas fa-clock"></i></div>
+                        <h2>Verification Pending</h2>
+                        <p>Your waste exchange request has been sent to the Mediator for quality assurance and purity verification.</p>
+                    </div>
+                </div>
+
+                <!-- Export Success results -->
+                <div class="glass-card biz-results-card hidden" id="biz-results">
+                    <div class="biz-success-header">
+                        <div class="biz-success-icon"><i class="fas fa-check-circle"></i></div>
+                        <h2>Waste Exported Successfully!</h2>
+                        <p>Your waste has been matched and is being processed</p>
+                    </div>
+                    <button class="btn-certificate" onclick="showCertificate('export')">
+                        <i class="fas fa-certificate"></i> Download Earth Recovery Certificate
+                    </button>
+                    <div class="biz-results-grid">
+                        <div class="biz-result-item revenue">
+                            <i class="fas fa-rupee-sign"></i>
+                            <span class="biz-result-val" id="biz-result-revenue">₹0</span>
+                            <span class="biz-result-label">Revenue Earned</span>
+                        </div>
+                        <div class="biz-result-item earth">
+                            <i class="fas fa-globe-americas"></i>
+                            <span class="biz-result-val" id="biz-result-co2">0 kg</span>
+                            <span class="biz-result-label">CO₂ Saved</span>
+                        </div>
+                        <div class="biz-result-item trees">
+                            <i class="fas fa-tree"></i>
+                            <span class="biz-result-val" id="biz-result-trees">0</span>
+                            <span class="biz-result-label">Trees Equivalent</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== IMPORT SECTION ===== -->
+                <div id="biz-import-section" class="biz-layout" style="display:none;">
+                    <!-- Import Request Card -->
+                    <div class="glass-card biz-upload-card biz-import-card">
+                        <h3><i class="fas fa-arrow-circle-down"></i> Import Waste Material</h3>
+                        <form id="biz-import-form">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="biz-import-type">Material Needed</label>
+                                    <div class="select-wrapper">
+                                        <select id="biz-import-type" required>
+                                            <option value="">Select material type...</option>
+                                            <option value="plastic">♻️ Recycled Plastic</option>
+                                            <option value="metal">🔩 Metal Scrap / Slag</option>
+                                            <option value="chemical">🧪 Chemical Byproducts</option>
+                                            <option value="flyash">🏭 Fly Ash</option>
+                                            <option value="organic">🌿 Organic / Biomass</option>
+                                            <option value="ewaste">💻 E-Waste Components</option>
+                                            <option value="textile">🧵 Textile Offcuts</option>
+                                            <option value="rubber">⚫ Rubber Crumbs</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="biz-import-qty">Quantity (Tons)</label>
+                                    <input type="number" id="biz-import-qty" placeholder="e.g. 100" required min="1">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="biz-import-desc">Usage Description</label>
+                                    <textarea id="biz-import-desc" rows="2" placeholder="How will you use this material..."></textarea>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="biz-import-doc"><i class="fas fa-file-alt"></i> Request Specific Quality Report (Optional)</label>
+                                    <input type="file" id="biz-import-doc" accept=".pdf,.png,.jpg" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white;">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary btn-lg biz-import-btn-style" id="biz-import-submit-btn">
+                                <i class="fas fa-search"></i> Find Suppliers
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Import Suggestions -->
+                    <div class="glass-card biz-suggestions-card hidden" id="biz-import-suggestions">
+                        <div class="card-header">
+                            <h3><i class="fas fa-industry"></i> Available Suppliers</h3>
+                            <span class="badge info">AI MATCHED</span>
+                        </div>
+                        <p class="biz-suggest-intro" id="biz-import-suggest-intro"></p>
+                        <div class="biz-company-list" id="biz-import-company-list"></div>
+                        <!-- Route Map -->
+                        <div class="biz-route-map-wrap">
+                            <h4><i class="fas fa-route"></i> Route to Supplier</h4>
+                            <div id="biz-import-map" style="height:220px;border-radius:8px;margin:8px 0;"></div>
+                            <p class="biz-distance-info" id="biz-import-distance"></p>
+                        </div>
+                        <button class="btn-primary btn-lg biz-import-btn-style" id="biz-import-confirm-btn" style="display:none;">
+                            <i class="fas fa-check-circle"></i> Confirm &amp; Import Material
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Import Pending Results -->
+                <div class="glass-card biz-results-card biz-import-results hidden" id="biz-import-results-pending" style="border-color: var(--neon-amber);">
+                    <div class="biz-success-header">
+                        <div class="biz-success-icon import-icon" style="background: rgba(251, 191, 36, 0.2); color: var(--neon-amber);"><i class="fas fa-clock"></i></div>
+                        <h2>Verification Pending</h2>
+                        <p>Your import request is waiting for Mediator approval regarding the material's quality standards.</p>
+                    </div>
+                </div>
+
+                <!-- Import Success results -->
+                <div class="glass-card biz-results-card biz-import-results hidden" id="biz-import-results">
+                    <div class="biz-success-header">
+                        <div class="biz-success-icon import-icon"><i class="fas fa-box-open"></i></div>
+                        <h2>Material Imported Successfully!</h2>
+                        <p>Recycled material sourced — saving money &amp; the planet</p>
+                    </div>
+                    <div class="biz-results-grid">
+                        <div class="biz-result-item savings">
+                            <i class="fas fa-piggy-bank"></i>
+                            <span class="biz-result-val" id="biz-import-result-savings">₹0</span>
+                            <span class="biz-result-label">Cost Saved vs Raw</span>
+                        </div>
+                        <div class="biz-result-item earth">
+                            <i class="fas fa-globe-americas"></i>
+                            <span class="biz-result-val" id="biz-import-result-co2">0 kg</span>
+                            <span class="biz-result-label">CO₂ Prevented</span>
+                        </div>
+                        <div class="biz-result-item water">
+                            <i class="fas fa-tint"></i>
+                            <span class="biz-result-val" id="biz-import-result-water">0 L</span>
+                            <span class="biz-result-label">Water Saved</span>
+                        </div>
+                    </div>
+                    <button class="btn-certificate" onclick="showCertificate('import')" style="margin-top: 15px;">
+                        <i class="fas fa-certificate"></i> Download Earth Recovery Certificate
+                    </button>
+                </div>
+
+                <!-- ===== ACTIVITY SECTION (BUSINESS) ===== -->
+                <div id="biz-activity-section" class="biz-layout" style="display:none; margin-top: 24px;">
+                    <div class="biz-activity-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2><i class="fas fa-chart-line"></i> Activity & Insights</h2>
+                        <button class="btn-secondary" id="biz-view-profile-btn" onclick="alert('Public Profile Link Copied!')"><i class="fas fa-external-link-alt"></i> View Public Profile</button>
+                    </div>
+                    <div id="biz-activity-content">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- ===== CARBON MARKET SECTION ===== -->
+                <div id="biz-carbon-section" class="biz-layout" style="display:none; margin-top: 24px;">
+                    <div class="biz-activity-header" style="margin-bottom: 20px;">
+                        <h2><i class="fas fa-leaf" style="color:var(--neon-green)"></i> Carbon Emission & Credits Tracking</h2>
+                    </div>
+                    
+                    <div class="kpi-row" id="biz-carbon-kpi-row">
+                        <div class="kpi-card" id="biz-kpi-emissions">
+                            <div class="kpi-icon orange"><i class="fas fa-industry"></i></div>
+                            <div class="kpi-data">
+                                <span class="kpi-value biz-counter" id="biz-emissions-total-val">0</span>
+                                <span class="kpi-unit">tons</span>
+                            </div>
+                            <span class="kpi-label">Gross Emissions</span>
+                        </div>
+                        <div class="kpi-card" id="biz-kpi-reduced">
+                            <div class="kpi-icon green"><i class="fas fa-tree"></i></div>
+                            <div class="kpi-data">
+                                <span class="kpi-value biz-counter" id="biz-emissions-reduced-val">0</span>
+                                <span class="kpi-unit">tons</span>
+                            </div>
+                            <span class="kpi-label">Emissions Reduced</span>
+                        </div>
+                        <div class="kpi-card" id="biz-kpi-net">
+                            <div class="kpi-icon blue"><i class="fas fa-cloud"></i></div>
+                            <div class="kpi-data">
+                                <span class="kpi-value biz-counter" id="biz-emissions-net-val">0</span>
+                                <span class="kpi-unit">tons</span>
+                            </div>
+                            <span class="kpi-label">Net Emissions</span>
+                            <span class="kpi-trend" id="biz-net-status"><i class="fas fa-circle"></i> Status</span>
+                        </div>
+                        <div class="kpi-card" id="biz-kpi-credits">
+                            <div class="kpi-icon purple"><i class="fas fa-coins"></i></div>
+                            <div class="kpi-data">
+                                <span class="kpi-value biz-counter" id="biz-credits-val">0</span>
+                            </div>
+                            <span class="kpi-label">Carbon Credits Balance</span>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid" style="margin-top: 24px;">
+                        <!-- Sustainability Actions -->
+                        <div class="glass-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-seedling"></i> Sustainability Actions</h3>
+                            </div>
+                            <p class="modal-desc" style="margin-bottom: 15px;">Perform these actions to reduce emissions and generate credits locally.</p>
+                            <div class="carbon-actions-list">
+                                <div class="carbon-action-card" onclick="performSustainabilityAction('tree')">
+                                    <i class="fas fa-tree" style="color:var(--neon-green)"></i>
+                                    <div class="carbon-action-info">
+                                        <h4>Tree Plantation</h4>
+                                        <p>-10 Tons CO₂ | +5 Credits</p>
+                                    </div>
+                                    <button class="btn-sm"><i class="fas fa-plus"></i> Initiate</button>
+                                </div>
+                                <div class="carbon-action-card" onclick="performSustainabilityAction('solar')">
+                                    <i class="fas fa-solar-panel" style="color:var(--neon-amber)"></i>
+                                    <div class="carbon-action-info">
+                                        <h4>Renewable Energy</h4>
+                                        <p>-50 Tons CO₂ | +25 Credits</p>
+                                    </div>
+                                    <button class="btn-sm"><i class="fas fa-plus"></i> Switch</button>
+                                </div>
+                                <div class="carbon-action-card" onclick="performSustainabilityAction('recycle')">
+                                    <i class="fas fa-recycle" style="color:var(--neon-blue)"></i>
+                                    <div class="carbon-action-info">
+                                        <h4>Recycling Hub</h4>
+                                        <p>-25 Tons CO₂ | +12 Credits</p>
+                                    </div>
+                                    <button class="btn-sm"><i class="fas fa-plus"></i> Start</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Marketplace -->
+                        <div class="glass-card card-wide">
+                            <div class="card-header">
+                                <h3><i class="fas fa-exchange-alt"></i> Carbon Credit Marketplace</h3>
+                                <div class="card-actions">
+                                    <button class="btn-sm" onclick="openSellModal()" style="background:var(--neon-purple); color:white; border:none;"><i class="fas fa-tag"></i> Sell Credits</button>
+                                </div>
+                            </div>
+                            <div class="market-list-container mt-3">
+                                <table class="market-table" style="width: 100%; text-align: left; border-collapse: collapse;">
+                                    <thead>
+                                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                            <th style="padding: 10px;">Seller Industry</th>
+                                            <th style="padding: 10px;">Credits Available</th>
+                                            <th style="padding: 10px;">Price / Credit</th>
+                                            <th style="padding: 10px; text-align: right;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="market-list-body">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== PAGE: MEDIATOR DASHBOARD ===== -->
+            <section id="page-mediator" class="page">
+                <div class="page-header">
+                    <h1>Mediator Control Panel</h1>
+                    <p class="page-subtitle">Verify industrial waste exchanges, ensure material purity, and authorize logistics.</p>
+                </div>
+                
+                <div class="impact-kpis">
+                    <div class="impact-kpi-card" style="flex:1;">
+                        <div class="impact-kpi-visual amber">
+                            <i class="fas fa-clock" style="font-size:36px; padding:20px;"></i>
+                        </div>
+                        <div class="impact-kpi-info">
+                            <span class="impact-kpi-val" id="med-kpi-pending">0</span>
+                            <span class="impact-kpi-unit">Pending Verifications</span>
+                        </div>
+                    </div>
+                    <div class="impact-kpi-card" style="flex:1;">
+                        <div class="impact-kpi-visual green">
+                            <i class="fas fa-check-circle" style="font-size:36px; padding:20px;"></i>
+                        </div>
+                        <div class="impact-kpi-info">
+                            <span class="impact-kpi-val" id="med-kpi-approved">0</span>
+                            <span class="impact-kpi-unit">Total Approvals</span>
+                        </div>
+                    </div>
+                    <div class="impact-kpi-card" style="flex:1;">
+                        <div class="impact-kpi-visual red">
+                            <i class="fas fa-times-circle" style="font-size:36px; padding:20px;"></i>
+                        </div>
+                        <div class="impact-kpi-info">
+                            <span class="impact-kpi-val" id="med-kpi-rejected">0</span>
+                            <span class="impact-kpi-unit">Rejected Transactions</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid" style="margin-top:24px;">
+                    <div class="glass-card card-wide">
+                        <div class="card-header">
+                            <h3><i class="fas fa-clipboard-list"></i> Exchange Requests Queue</h3>
+                        </div>
+                        <div class="market-list-container mt-3">
+                            <table class="market-table" style="width: 100%; text-align: left; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                        <th style="padding: 10px;">Source Industry</th>
+                                        <th style="padding: 10px;">Receiving Industry</th>
+                                        <th style="padding: 10px;">Material & Qty</th>
+                                        <th style="padding: 10px;">Location</th>
+                                        <th style="padding: 10px;">Status</th>
+                                        <th style="padding: 10px; text-align: right;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="mediator-queue-body">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Theme Customizer Modal -->
+        <div id="theme-customizer-modal" class="modal-overlay hidden">
+            <div class="modal-content glass-card" style="width: 400px;">
+                <div class="modal-header">
+                    <h2><i class="fas fa-palette"></i> Customize Theme</h2>
+                    <button class="modal-close" id="theme-modal-close"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-desc">Personalize the styling and colors of the WIN Platform to match your preference.</div>
+                
+                <h4 style="margin-bottom:12px; font-size:13px; color:var(--text-secondary);">Base Theme</h4>
+                <div style="display:flex; gap:10px; margin-bottom: 24px;">
+                    <button class="btn-secondary" id="btn-theme-dark"><i class="fas fa-moon"></i> Dark</button>
+                    <button class="btn-secondary" id="btn-theme-light"><i class="fas fa-sun"></i> Light</button>
+                    <button class="btn-secondary" id="btn-theme-ocean"><i class="fas fa-water"></i> Ocean</button>
+                </div>
+
+                <h4 style="margin-bottom:12px; font-size:13px; color:var(--text-secondary);">Custom Accent Color</h4>
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom: 24px;">
+                    <input type="color" id="custom-accent-color" value="#00e68a" style="width:50px; height:50px; border:none; border-radius:8px; cursor:pointer; background:none;">
+                    <span style="font-size:12px; color:var(--text-muted);">Pick any color to change the primary brand accents used across the platform.</span>
+                </div>
+
+                <h4 style="margin-bottom:12px; font-size:13px; color:var(--text-secondary);">Ambient Gradient Background</h4>
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom: 24px;">
+                    <input type="color" id="ambient-color-1" value="#0a0e17" style="width:40px; height:40px; border:none; border-radius:8px; cursor:pointer; background:none;">
+                    <input type="color" id="ambient-color-2" value="#0a0e17" style="width:40px; height:40px; border:none; border-radius:8px; cursor:pointer; background:none;">
+                    <span style="font-size:12px; color:var(--text-muted);">Blend two custom colors across the background canvas for a unique atmospheric glow.</span>
+                </div>
+
+                <button class="btn-primary btn-lg" id="reset-theme-btn" style="width:100%; margin-top:0;">
+                    <i class="fas fa-undo"></i> Reset to Default
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SELL CREDITS MODAL -->
+    <div class="modal-overlay hidden" id="sell-credits-modal" onclick="closeSellModal()">
+        <div class="modal-content glass-card" onclick="event.stopPropagation()" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2><i class="fas fa-tag"></i> Sell Carbon Credits</h2>
+                <button class="modal-close" onclick="closeSellModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>List your excess credits on the global marketplace.</p>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Amount of Credits to Sell</label>
+                    <input type="number" id="sell-credits-amt" placeholder="e.g. 50" min="1">
+                    <small style="color:var(--text-muted); display:block; margin-top:5px;">Available Balance: <span id="sell-credits-max" style="color:var(--neon-green); font-weight:bold;">0</span></small>
+                </div>
+                <div class="form-group">
+                    <label>Price per Credit (₹)</label>
+                    <input type="number" id="sell-credits-price" value="150" min="50" max="500">
+                </div>
+                <button class="btn-primary" onclick="submitSellCredits()" style="width:100%; margin-top: 10px;"><i class="fas fa-check"></i> List on Market</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CERTIFICATE MODAL ===== -->
+    <div class="cert-overlay hidden" id="cert-overlay" onclick="closeCertificate()">
+        <div class="cert-modal" onclick="event.stopPropagation()">
+            <button class="cert-close" onclick="closeCertificate()"><i class="fas fa-times"></i></button>
+            <div id="cert-content" class="cert-content">
+                <div class="cert-border">
+                    <div class="cert-header">
+                        <div class="cert-logo"><i class="fas fa-globe-americas"></i></div>
+                        <h1>Earth Recovery Certificate</h1>
+                        <p class="cert-subtitle">Waste-to-Value Intelligence Network</p>
+                    </div>
+                    <div class="cert-body">
+                        <p class="cert-presented">This certificate is proudly presented to</p>
+                        <h2 class="cert-name" id="cert-biz-name">Business Name</h2>
+                        <p class="cert-desc" id="cert-desc">For their outstanding contribution to sustainability</p>
+                        <div class="cert-stats" id="cert-stats"></div>
+                        <div class="cert-quote">
+                            <i class="fas fa-quote-left"></i>
+                            <p>"By choosing to recycle, reuse, and repurpose industrial waste, you are building a greener future for generations to come."</p>
+                        </div>
+                    </div>
+                    <div class="cert-footer">
+                        <div class="cert-seal"><i class="fas fa-award"></i><span>Verified</span></div>
+                        <div class="cert-date" id="cert-date"></div>
+                        <div class="cert-id" id="cert-id"></div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-primary btn-lg cert-download-btn" onclick="downloadCertificate()">
+                <i class="fas fa-download"></i> Download as Image
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== TRANSACTION MODAL ===== -->
+    <div class="modal-overlay hidden" id="transaction-modal" onclick="closeTransactionModal()">
+        <div class="modal-content glass-card" onclick="event.stopPropagation()" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2><i class="fas fa-file-invoice-dollar"></i> Transaction Details</h2>
+                <button class="modal-close" onclick="closeTransactionModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="transaction-detail-item" style="margin-bottom: 12px; font-size: 16px;">
+                    <strong>Action:</strong> <span id="trans-modal-type">Exported</span> <span id="trans-modal-material" style="color: var(--neon-blue); font-weight: bold;">Plastic</span>
+                </div>
+                <div class="transaction-detail-item" style="margin-bottom: 12px; font-size: 16px;">
+                    <strong>Quantity:</strong> <span id="trans-modal-qty">0</span> tons
+                </div>
+                <div class="transaction-detail-item" style="margin-bottom: 12px; font-size: 16px;">
+                    <strong>Partner Company:</strong> <span id="trans-modal-partner" style="font-style: italic;">Unknown</span>
+                </div>
+                <div class="transaction-detail-item" style="margin-bottom: 20px; font-size: 16px;">
+                    <strong><span id="trans-modal-profit-label">Revenue</span>:</strong> <span id="trans-modal-profit" style="color: var(--neon-green); font-weight: 800; font-size: 20px;">₹0</span>
+                </div>
+                <div style="text-align: right;">
+                    <span id="trans-modal-time" style="font-size: 12px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">Just now</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MEDIATOR REVIEW MODAL ===== -->
+    <div class="modal-overlay hidden" id="mediator-review-modal" onclick="closeMediatorReview()">
+        <div class="modal-content glass-card" onclick="event.stopPropagation()" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2><i class="fas fa-shield-alt"></i> Quality Inspection Interface</h2>
+                <button class="modal-close" onclick="closeMediatorReview()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" style="display:flex; gap: 20px; margin-top:20px;">
+                <!-- Document Preview -->
+                <div style="flex: 1; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius:8px; padding: 15px; text-align:center;">
+                    <i class="fas fa-file-pdf" style="font-size: 48px; margin-bottom: 15px; color:#f43f5e;"></i>
+                    <h4 id="med-doc-title" style="margin-bottom: 5px;">Purity_Report.pdf</h4>
+                    <span style="font-size: 12px; color:var(--text-muted);">Uploaded by Source Industry</span>
+                    <hr style="border:none; border-top: 1px solid rgba(255,255,255,0.1); margin:15px 0;">
+                    <div style="text-align:left; font-size:13px;" id="med-doc-content">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+                
+                <!-- Review Form -->
+                <div style="flex: 1;">
+                    <input type="hidden" id="med-review-id">
+                    <h4 style="margin-bottom: 10px;">Verification Checklist</h4>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label><input type="checkbox" id="med-chk-purity" class="med-chk"> Impurities check passed</label>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label><input type="checkbox" id="med-chk-corrosion" class="med-chk"> No corrosive anomalies</label>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label><input type="checkbox" id="med-chk-weight" class="med-chk"> Material quality verified</label>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label>Mediator Comments</label>
+                        <textarea id="med-review-comments" rows="2" placeholder="Provide feedback..."></textarea>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <button class="btn-primary" onclick="submitMediatorReview('approved')" style="width:100%;"><i class="fas fa-check"></i> Approve Material</button>
+                        <button class="btn-sm" onclick="submitMediatorReview('rejected')" style="width:100%; background:var(--neon-red); border:none; color:white; padding: 12px;"><i class="fas fa-times"></i> Reject Material</button>
+                        <button class="btn-secondary" onclick="submitMediatorReview('re-evaluate')" style="width:100%; padding: 12px;"><i class="fas fa-search"></i> Request Re-evaluation</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

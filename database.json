@@ -1,0 +1,758 @@
+{
+  "users": [
+    {
+      "username": "king",
+      "password": "1234",
+      "businessName": "king PVTLTD"
+    },
+    {
+      "username": "queeen",
+      "password": "1234",
+      "businessName": "queens"
+    },
+    {
+      "username": "abc",
+      "password": "123",
+      "businessName": "abc  PVTLTD"
+    },
+    {
+      "username": "xyz",
+      "password": "12345",
+      "businessName": "xyz"
+    },
+    {
+      "username": "rosh",
+      "password": "12345",
+      "businessName": "RJ"
+    }
+  ],
+  "bizData": {
+    "king": {
+      "revenue": 258325,
+      "co2": 138524,
+      "waste": 30,
+      "matches": 2,
+      "imported": 70,
+      "importSavings": 618017,
+      "importCo2": 84140,
+      "lat": 12.9716,
+      "lng": 77.5946
+    },
+    "queeen": {
+      "revenue": 171174,
+      "co2": 86124,
+      "waste": 20,
+      "matches": 2,
+      "imported": 100,
+      "importSavings": 330000,
+      "importCo2": 50000,
+      "lat": 12.9716,
+      "lng": 77.5946
+    },
+    "omkar": {
+      "revenue": 36382,
+      "co2": 34212,
+      "waste": 10,
+      "matches": 2,
+      "imported": 10,
+      "importSavings": 165961,
+      "importCo2": 30095,
+      "lat": 13.0034572364429,
+      "lng": 77.53790664528248
+    },
+    "abc": {
+      "revenue": 377918,
+      "co2": 79760,
+      "waste": 30,
+      "matches": 5,
+      "imported": 15,
+      "importSavings": 103551,
+      "importCo2": 12920,
+      "lat": 13.135061071778027,
+      "lng": 77.56868930237032,
+      "emissionsTotal": 850,
+      "emissionsReduced": 373,
+      "carbonCredits": 12,
+      "activities": [
+        {
+          "type": "export",
+          "title": "Tree Plantation",
+          "detail": "Generated 5 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 5,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "import",
+          "title": "Bought Carbon Credits",
+          "detail": "Purchased 13 credits from xyz",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-shopping-cart\"></i>",
+          "material": "Credits",
+          "qty": 13,
+          "partner": "xyz",
+          "profit": -1950
+        },
+        {
+          "type": "export",
+          "title": "Exported Chemical",
+          "detail": "10 tons matched via WIN",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-arrow-circle-up\"></i>",
+          "material": "Chemical",
+          "qty": 10,
+          "partner": "ChemTreat Solutions",
+          "profit": 55000
+        },
+        {
+          "type": "export",
+          "title": "Recycling Hub Init",
+          "detail": "Generated 12 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 12,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "export",
+          "title": "Renewable Energy Switch",
+          "detail": "Generated 25 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 25,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "export",
+          "title": "Tree Plantation",
+          "detail": "Generated 5 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 5,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "import",
+          "title": "Bought Carbon Credits",
+          "detail": "Purchased 10 credits from xyz",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-shopping-cart\"></i>",
+          "material": "Credits",
+          "qty": 10,
+          "partner": "xyz",
+          "profit": -1500
+        },
+        {
+          "type": "export",
+          "title": "Tree Plantation",
+          "detail": "Generated 5 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 5,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "export",
+          "title": "Renewable Energy Switch",
+          "detail": "Generated 25 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 25,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "export",
+          "title": "Recycling Hub Init",
+          "detail": "Generated 12 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 12,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "export",
+          "title": "Exported Metal",
+          "detail": "10 tons matched via WIN",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-arrow-circle-up\"></i>",
+          "material": "Metal",
+          "qty": 10,
+          "partner": "Cement Works Ltd",
+          "profit": 120000
+        },
+        {
+          "type": "export",
+          "title": "Tree Plantation",
+          "detail": "Generated 5 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 5,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "export",
+          "title": "Renewable Energy Switch",
+          "detail": "Generated 25 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 25,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "export",
+          "title": "Recycling Hub Init",
+          "detail": "Generated 12 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 12,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "export",
+          "title": "Recycling Hub Init",
+          "detail": "Generated 12 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 12,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "export",
+          "title": "Renewable Energy Switch",
+          "detail": "Generated 25 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 25,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "export",
+          "title": "Tree Plantation",
+          "detail": "Generated 5 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 5,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "import",
+          "title": "Imported Organic",
+          "detail": "10 tons sourced via WIN",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-arrow-circle-down\"></i>",
+          "material": "Organic",
+          "qty": 10,
+          "partner": "ITC Foods",
+          "profit": 33000
+        }
+      ],
+      "walletBalance": 1496550
+    },
+    "xyz": {
+      "revenue": 51210489,
+      "co2": 1586374,
+      "waste": 210,
+      "matches": 5,
+      "imported": 20,
+      "importSavings": 418234,
+      "importCo2": 35866,
+      "lat": 13.134867672959896,
+      "lng": 77.56855588772211,
+      "emissionsTotal": 130,
+      "emissionsReduced": 339,
+      "carbonCredits": 152,
+      "activities": [
+        {
+          "type": "import",
+          "title": "Bought Carbon Credits",
+          "detail": "Purchased 3 credits from abc  PVTLTD",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-shopping-cart\"></i>",
+          "material": "Credits",
+          "qty": 3,
+          "partner": "abc  PVTLTD",
+          "profit": -45000
+        },
+        {
+          "type": "export",
+          "title": "Tree Plantation",
+          "detail": "Generated 5 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 5,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "import",
+          "title": "Bought Carbon Credits",
+          "detail": "Purchased 2 credits from abc  PVTLTD",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-shopping-cart\"></i>",
+          "material": "Credits",
+          "qty": 2,
+          "partner": "abc  PVTLTD",
+          "profit": -30000
+        },
+        {
+          "type": "export",
+          "title": "Recycling Hub Init",
+          "detail": "Generated 12 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 12,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "export",
+          "title": "Renewable Energy Switch",
+          "detail": "Generated 25 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 25,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "export",
+          "title": "Tree Plantation",
+          "detail": "Generated 5 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 5,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "export",
+          "title": "Recycling Hub Init",
+          "detail": "Generated 12 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 12,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "export",
+          "title": "Renewable Energy Switch",
+          "detail": "Generated 25 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 25,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "export",
+          "title": "Tree Plantation",
+          "detail": "Generated 5 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 5,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "export",
+          "title": "Renewable Energy Switch",
+          "detail": "Generated 25 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 25,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "export",
+          "title": "Recycling Hub Init",
+          "detail": "Generated 12 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 12,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "export",
+          "title": "Tree Plantation",
+          "detail": "Generated 5 credits",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-leaf\"></i>",
+          "material": "Credits",
+          "qty": 5,
+          "partner": "Network",
+          "profit": 0
+        },
+        {
+          "type": "export",
+          "title": "Exported Chemical",
+          "detail": "10 tons matched via WIN",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-arrow-circle-up\"></i>",
+          "material": "Chemical",
+          "qty": 10,
+          "partner": "ChemTreat Solutions",
+          "profit": 55000
+        },
+        {
+          "type": "import",
+          "title": "Bought Carbon Credits",
+          "detail": "Purchased 69 credits from abc  PVTLTD",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-shopping-cart\"></i>",
+          "material": "Credits",
+          "qty": 69,
+          "partner": "abc  PVTLTD",
+          "profit": -10350
+        },
+        {
+          "type": "export",
+          "title": "Exported Ewaste",
+          "detail": "100 tons matched via WIN",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-arrow-circle-up\"></i>",
+          "material": "Ewaste",
+          "qty": 100,
+          "partner": "TechRecycle India",
+          "profit": 4500000
+        },
+        {
+          "type": "export",
+          "title": "Exported Ewaste",
+          "detail": "100 tons matched via WIN",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-arrow-circle-up\"></i>",
+          "material": "Ewaste",
+          "qty": 100,
+          "partner": "TechRecycle India",
+          "profit": 4500000
+        },
+        {
+          "type": "import",
+          "title": "Imported Flyash",
+          "detail": "10 tons sourced via WIN",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-arrow-circle-down\"></i>",
+          "material": "Flyash",
+          "qty": 10,
+          "partner": "Tata Power Unit 12",
+          "profit": 45000
+        },
+        {
+          "type": "import",
+          "title": "Imported Flyash",
+          "detail": "10 tons sourced via WIN",
+          "time": "Just now",
+          "icon": "<i class=\"fas fa-arrow-circle-down\"></i>",
+          "material": "Flyash",
+          "qty": 10,
+          "partner": "Tata Power Unit 12",
+          "profit": 45000
+        }
+      ],
+      "walletBalance": 1414650
+    },
+    "rosh": {
+      "revenue": 0,
+      "co2": 0,
+      "waste": 0,
+      "matches": 0,
+      "imported": 0,
+      "importSavings": 0,
+      "importCo2": 0,
+      "lat": 13.134984439171868,
+      "lng": 77.5685912941572,
+      "emissionsTotal": 0,
+      "emissionsReduced": 0,
+      "carbonCredits": 0,
+      "activities": []
+    }
+  },
+  "marketplace": [
+    {
+      "id": 1775458453897,
+      "seller": "xyz",
+      "credits": 10,
+      "price": 150
+    },
+    {
+      "id": 1775459753128,
+      "seller": "xyz",
+      "credits": 10,
+      "price": 1500
+    },
+    {
+      "id": 1775462382062,
+      "seller": "abc  PVTLTD",
+      "credits": 100,
+      "price": 150000
+    },
+    {
+      "id": 1775471120359,
+      "seller": "xyz",
+      "credits": 10,
+      "price": 150
+    }
+  ],
+  "transactions": [
+    {
+      "id": 1775465997605,
+      "sourceName": "xyz",
+      "sourceUser": "xyz",
+      "receiverName": "Road Construction Co.",
+      "material": "plastic",
+      "qty": 10,
+      "location": "Bangalore Industrial Area",
+      "status": "approved",
+      "txType": "export",
+      "companyData": {
+        "name": "Road Construction Co.",
+        "detail": "Uses plastic for road surfacing",
+        "icon": "🛤️",
+        "pricePerTon": 8500,
+        "lat": 12.9352,
+        "lng": 77.6245
+      },
+      "qualityScore": 96,
+      "corrosionCheck": "Minor traces",
+      "mediatorComments": ""
+    },
+    {
+      "id": 1775466295642,
+      "sourceName": "xyz",
+      "sourceUser": "xyz",
+      "receiverName": "Road Construction Co.",
+      "material": "plastic",
+      "qty": 10,
+      "location": "Bangalore Industrial Area",
+      "status": "approved",
+      "txType": "export",
+      "companyData": {
+        "name": "Road Construction Co.",
+        "detail": "Uses plastic for road surfacing",
+        "icon": "🛤️",
+        "pricePerTon": 8500,
+        "lat": 12.9352,
+        "lng": 77.6245
+      },
+      "qualityScore": 82,
+      "corrosionCheck": "Pass",
+      "mediatorComments": ""
+    },
+    {
+      "id": 1775466750861,
+      "sourceName": "xyz",
+      "sourceUser": "xyz",
+      "receiverName": "Cement Works Ltd",
+      "material": "metal",
+      "qty": 10,
+      "location": "Bangalore Industrial Area",
+      "status": "approved",
+      "txType": "export",
+      "companyData": {
+        "name": "Cement Works Ltd",
+        "detail": "Uses metal slag in cement",
+        "icon": "🏗️",
+        "pricePerTon": 12000,
+        "lat": 13.1986,
+        "lng": 77.7066
+      },
+      "qualityScore": 91,
+      "corrosionCheck": "Pass",
+      "mediatorComments": ""
+    },
+    {
+      "id": 1775468111660,
+      "sourceName": "xyz",
+      "sourceUser": "xyz",
+      "receiverName": "EcoBricks Pvt Ltd",
+      "material": "plastic",
+      "qty": 10,
+      "location": "Bangalore Industrial Area",
+      "status": "approved",
+      "txType": "export",
+      "companyData": {
+        "name": "EcoBricks Pvt Ltd",
+        "detail": "Converts plastic to eco-bricks",
+        "icon": "🧱",
+        "pricePerTon": 7200,
+        "lat": 13.0827,
+        "lng": 77.5877
+      },
+      "qualityScore": 86,
+      "corrosionCheck": "Minor traces",
+      "mediatorComments": ""
+    },
+    {
+      "id": 1775471034809,
+      "sourceName": "xyz",
+      "sourceUser": "xyz",
+      "receiverName": "RecycleMax Industries",
+      "material": "plastic",
+      "qty": 10,
+      "location": "Bangalore Industrial Area",
+      "status": "approved",
+      "txType": "export",
+      "companyData": {
+        "name": "RecycleMax Industries",
+        "detail": "Recycles into pellets",
+        "icon": "♻️",
+        "pricePerTon": 6800,
+        "lat": 12.8456,
+        "lng": 77.6632
+      },
+      "qualityScore": 82,
+      "corrosionCheck": "Minor traces",
+      "mediatorComments": ""
+    },
+    {
+      "id": 1775473561021,
+      "sourceName": "xyz",
+      "sourceUser": "xyz",
+      "receiverName": "EcoBricks Pvt Ltd",
+      "material": "plastic",
+      "qty": 10,
+      "location": "Bangalore Industrial Area",
+      "status": "approved",
+      "txType": "export",
+      "companyData": {
+        "name": "EcoBricks Pvt Ltd",
+        "detail": "Converts plastic to eco-bricks",
+        "icon": "🧱",
+        "pricePerTon": 7200,
+        "lat": 13.0827,
+        "lng": 77.5877
+      },
+      "qualityScore": 86,
+      "corrosionCheck": "Minor traces",
+      "mediatorComments": ""
+    },
+    {
+      "id": 1775474712738,
+      "sourceName": "JSW Steel Works",
+      "receiverUser": "xyz",
+      "receiverName": "xyz",
+      "material": "metal",
+      "qty": 10,
+      "location": "Bangalore Industrial Area",
+      "status": "approved",
+      "txType": "import",
+      "companyData": {
+        "name": "JSW Steel Works",
+        "detail": "Steel slag & mill scale",
+        "icon": "🔩",
+        "pricePerTon": 8500,
+        "rawPrice": 25000,
+        "lat": 15.4167,
+        "lng": 73.9833
+      },
+      "qualityScore": 90,
+      "corrosionCheck": "Minor traces",
+      "mediatorComments": ""
+    },
+    {
+      "id": 1775479071227,
+      "sourceName": "xyz",
+      "sourceUser": "xyz",
+      "receiverName": "Road Construction Co.",
+      "material": "plastic",
+      "qty": 10,
+      "location": "Bangalore Industrial Area",
+      "status": "approved",
+      "txType": "export",
+      "companyData": {
+        "name": "Road Construction Co.",
+        "detail": "Uses plastic for road surfacing",
+        "icon": "🛤️",
+        "pricePerTon": 8500,
+        "lat": 12.9352,
+        "lng": 77.6245
+      },
+      "qualityScore": 94,
+      "corrosionCheck": "Pass",
+      "mediatorComments": ""
+    },
+    {
+      "id": 1775490391566,
+      "sourceName": "xyz",
+      "sourceUser": "xyz",
+      "receiverName": "ChemTreat Solutions",
+      "material": "chemical",
+      "qty": 10,
+      "location": "Bangalore Industrial Area",
+      "status": "approved",
+      "txType": "export",
+      "companyData": {
+        "name": "ChemTreat Solutions",
+        "detail": "Reprocesses chemicals",
+        "icon": "🧪",
+        "pricePerTon": 5500,
+        "lat": 12.9081,
+        "lng": 77.6476
+      },
+      "qualityScore": 95,
+      "corrosionCheck": "Pass",
+      "mediatorComments": ""
+    },
+    {
+      "id": 1775491342488,
+      "sourceName": "xyz",
+      "sourceUser": "xyz",
+      "receiverName": "ChemTreat Solutions",
+      "material": "chemical",
+      "qty": 1,
+      "location": "Bangalore Industrial Area",
+      "status": "approved",
+      "txType": "export",
+      "companyData": {
+        "name": "ChemTreat Solutions",
+        "detail": "Reprocesses chemicals",
+        "icon": "🧪",
+        "pricePerTon": 5500,
+        "lat": 12.9081,
+        "lng": 77.6476
+      },
+      "qualityScore": 91,
+      "corrosionCheck": "Minor traces",
+      "mediatorComments": ""
+    }
+  ]
+}
