@@ -71,3 +71,6 @@ If you enable the optional Gemini-powered recommendations, provide the API key a
 ## License
 
 No license has been selected for this repository yet.
+## SharePlate food rescue MVP
+
+The SharePlate application is in the shareplate/ folder. From the repository root, change into that folder and run npm start. It uses http://localhost:3001 so it can run alongside the Waste Management API on port 3000.
