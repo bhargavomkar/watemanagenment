@@ -73,4 +73,18 @@ If you enable the optional Gemini-powered recommendations, provide the API key a
 No license has been selected for this repository yet.
 ## SharePlate food rescue MVP
 
-The SharePlate application is in the shareplate/ folder. From the repository root, change into that folder and run npm start. It uses http://localhost:3001 so it can run alongside the Waste Management API on port 3000.
+SharePlate is a separate surplus-food app in the shareplate/ directory. It lets restaurants, cafes, and hotel kitchens list discounted food, then route an unclaimed offer to a selected community club as a donation.
+
+### Features
+
+- Restaurant signup captures a GPS pin after the user grants browser location access; new listings reuse the saved pin.
+- Community members can find nearby offers, filter by radius, and open pickup directions.
+- Restaurants can set a donation cutoff. Unclaimed discounted food changes to a free offer for its partner club, which receives first claim.
+- A six-digit pickup code verifies the handoff before the restaurant confirms collection and earns Food Score points.
+- Local accounts and offers are stored in shareplate/data.json, which is excluded from Git.
+
+### Run SharePlate locally
+
+Requires Node.js 18 or later. From the repository root, change to the shareplate directory and run npm start. Then open http://localhost:3001. This separate port avoids a conflict with the Waste Management API on port 3000.
+
+Browser GPS works on localhost or HTTPS and asks the user for permission. This remains a local MVP: production use still needs a transactional database, food-business verification, and food-safety operating procedures. The app does not send club push notifications; partners see fallback offers in the app.
