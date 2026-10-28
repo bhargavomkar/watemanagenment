@@ -3,9 +3,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { createDemoData } from './demo-seed.mjs';
 const root=path.dirname(fileURLToPath(import.meta.url)), dataFile=path.join(root,'data.json'), port=Number(process.env.PORT||3001);
 const blank={users:[],offers:[],claims:[],sessions:[]};
-function read(){if(!fs.existsSync(dataFile))return structuredClone(blank);return JSON.parse(fs.readFileSync(dataFile,'utf8'))}
+function read(){if(!fs.existsSync(dataFile)){const seed=createDemoData();save(seed);return seed}return JSON.parse(fs.readFileSync(dataFile,'utf8'))}
 function save(db){const temp=dataFile+'.'+process.pid+'.tmp';fs.writeFileSync(temp,JSON.stringify(db,null,2),{mode:0o600});fs.renameSync(temp,dataFile)}
 function id(){return crypto.randomUUID()}
 function json(res,status,obj){res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Access-Control-Allow-Origin':'http://localhost:'+port,'Access-Control-Allow-Credentials':'true'});res.end(JSON.stringify(obj))}

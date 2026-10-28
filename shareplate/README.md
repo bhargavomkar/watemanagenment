@@ -16,7 +16,15 @@ SharePlate connects restaurants, cafes, and hotel kitchens with nearby community
 
 Requires Node.js 18 or later. No third-party packages are required.
 
-From this directory, run npm start, then open http://localhost:3001.
+From this directory, run `npm start`, then open http://localhost:3001. On first launch, the app creates local demo data with three hotel kitchens, sample offers, and a community club. It does not replace an existing `data.json`.
+
+Demo hotel accounts all use the password `DemoFood123!`:
+
+- `greenleaf.demo@shareplate.local` — Green Leaf Hotel Kitchen
+- `lakeview.demo@shareplate.local` — Lakeview Residency Kitchen
+- `sunrise.demo@shareplate.local` — Sunrise Grand Hotel Kitchen
+
+The demo club account is `club.demo@shareplate.local`, with the same password. Demo offers are dated relative to the first launch so they remain upcoming when the app is started later.
 
 The app also exposes a health endpoint at http://localhost:3001/api/health.
 
@@ -26,4 +34,4 @@ GPS is requested only when a user chooses a GPS action or submits restaurant sig
 
 ## Data and limitations
 
-Accounts and offers are stored in data.json in this folder; the file is excluded from Git. This is a local MVP rather than a public-production deployment. Before serving real users, use a transactional database, verify food businesses and community partners, and establish food-safety, missed-pickup, and complaint procedures. Club partners see donation fallbacks in the app; push notifications are not implemented.
+Accounts and offers are stored in data.json in this folder; the file is excluded from Git. The committed demo seed code creates that file only when it does not already exist. This is a local MVP rather than a public-production deployment. Before serving real users, use a transactional database, verify food businesses and community partners, and establish food-safety, missed-pickup, and complaint procedures. Club partners see donation fallbacks in the app; push notifications are not implemented.
